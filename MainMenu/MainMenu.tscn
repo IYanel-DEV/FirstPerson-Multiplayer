@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cw2rwrq4aokcc"]
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_mlc1t"]
+albedo_color = Color(0, 1, 0, 1)
+
+[node name="MainMenu" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(13.6546, 0, 0, 0, 1, 0, 0, 0, 13.6546, 0, -0.4995, 0)
+size = Vector3(1, 0.001, 1)
+material = SubResource("ORMMaterial3D_mlc1t")
