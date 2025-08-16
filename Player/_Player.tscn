@@ -22,6 +22,7 @@ properties/1/replication_mode = 1
 [node name="Player" type="CharacterBody3D"]
 safe_margin = 0.08
 script = ExtResource("1_cb6jr")
+jump_velocity = 10.05
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.73409, 0)
