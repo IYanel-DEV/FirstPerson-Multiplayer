@@ -4,6 +4,10 @@ extends Node
 # Interpolation settings
 const SMOOTHING_TIME = 0.15  # 150ms smoothing
 const MAX_EXTRAPOLATION = 0.2  # 200ms max
+# RemotePlayerController.gd (add at top)
+const POSITION_LERP_FACTOR = 0.3
+const ROTATION_LERP_FACTOR = 0.5
+const VELOCITY_LERP_FACTOR = 0.2
 
 # References
 var player: Node = null  # Will be set to Player node
@@ -104,17 +108,17 @@ func interpolate_movement(delta):
 		camera_rotation_history[next_index], t
 	)
 	
-	# Apply with smoothing
-	var smoothing_factor = clamp(delta * 20.0, 0.0, 1.0)
-	player.global_position = player.global_position.lerp(target_pos, smoothing_factor)
-	player.rotation = player.rotation.lerp(target_rot, smoothing_factor)
+	# Apply with smoothing using different factors
+	player.global_position = player.global_position.lerp(target_pos, POSITION_LERP_FACTOR)
+	player.rotation = player.rotation.lerp(target_rot, ROTATION_LERP_FACTOR)
 	
 	# Apply camera rotation if camera exists
 	if player.has_node("Camera3D"):
 		var camera = player.get_node("Camera3D")
-		camera.rotation = camera.rotation.lerp(target_cam_rot, smoothing_factor)
+		camera.rotation = camera.rotation.lerp(target_cam_rot, ROTATION_LERP_FACTOR)
 	
-	# Update velocity
-	player.velocity = velocity_history[prev_index].lerp(
-		velocity_history[next_index], t
+	# Update velocity with smoothing
+	player.velocity = player.velocity.lerp(
+		velocity_history[prev_index].lerp(velocity_history[next_index], t),
+		VELOCITY_LERP_FACTOR
 	)

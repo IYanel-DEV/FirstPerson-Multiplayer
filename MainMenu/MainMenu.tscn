@@ -1,5 +1,8 @@
-[gd_scene load_steps=18 format=4 uid="uid://cw2rwrq4aokcc"]
+[gd_scene load_steps=19 format=4 uid="uid://cw2rwrq4aokcc"]
 
+[ext_resource type="Texture2D" uid="uid://cwcexiteh4s2q" path="res://Textures/texture_02purpl.png" id="1_lbqne"]
+[ext_resource type="Texture2D" uid="uid://d0u76ui7ag1at" path="res://Textures/texture_02.png" id="2_430ii"]
+[ext_resource type="Texture2D" uid="uid://biec8m2uv843c" path="res://Textures/texture_03.png" id="3_3p42x"]
 [ext_resource type="Script" uid="uid://yxesc61whepc" path="res://MainMenu/Scripts/MainMenu.gd" id="4_lbqne"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_otibh"]
@@ -10,12 +13,6 @@ albedo_texture = SubResource("CompressedTexture2D_otibh")
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_mlc1t"]
 albedo_color = Color(0.815589, 0.826791, 0.857572, 1)
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_cruaa"]
-load_path = "res://.godot/imported/texture_07.png-65a9369b77deda1e59bf2203f066992e.s3tc.ctex"
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3clmd"]
-albedo_texture = SubResource("CompressedTexture2D_cruaa")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_mlc1t"]
 _surfaces = [{
@@ -28,6 +25,11 @@ _surfaces = [{
 "vertex_count": 36,
 "vertex_data": PackedByteArray("AAAAv28SA7oAAAA/AAAAv28SA7oAAAC/AAAAv28SAzoAAAC/AAAAP28SA7oAAAC/AAAAv28SA7oAAAC/AAAAv28SA7oAAAA/AAAAv28SAzoAAAC/AAAAv28SA7oAAAC/AAAAP28SA7oAAAC/AAAAv28SAzoAAAC/AAAAv28SAzoAAAA/AAAAv28SA7oAAAA/AAAAv28SA7oAAAA/AAAAv28SAzoAAAA/AAAAP28SAzoAAAA/AAAAP28SAzoAAAA/AAAAv28SAzoAAAA/AAAAv28SAzoAAAC/AAAAv28SA7oAAAA/AAAAP28SA7oAAAA/AAAAP28SA7oAAAC/AAAAP28SAzoAAAA/AAAAP28SA7oAAAA/AAAAv28SA7oAAAA/AAAAP28SA7oAAAC/AAAAP28SA7oAAAA/AAAAP28SAzoAAAA/AAAAP28SA7oAAAC/AAAAP28SAzoAAAC/AAAAv28SAzoAAAC/AAAAv28SAzoAAAC/AAAAP28SAzoAAAC/AAAAP28SAzoAAAA/AAAAP28SAzoAAAA/AAAAP28SAzoAAAC/AAAAP28SA7oAAAC/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//38AAP//AAD/fwAA//8AAP9/AAD//wAA/////wAA/z//////AAD/P/////8AAP8/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//3//fwAA/z//f/9/AAD/P/9//38AAP8//3//////AAD/f/////8AAP9//////wAA/38AAP//AAD/fwAA//8AAP9/AAD//wAA/3//fwAA/z//f/9/AAD/P/9//38AAP8/////f/9//n////9//3/+f////3//f/5//////wAA/z//////AAD/P/////8AAP8//3//////AAD/f/////8AAP9//////wAA////f/9//n////9//3/+f////3//f/5/")
 }]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3clmd"]
+albedo_texture = ExtResource("1_lbqne")
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_otibh"]
 
@@ -54,15 +56,17 @@ albedo_color = Color(0, 0, 0, 1)
 material = SubResource("ORMMaterial3D_otibh")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bsanu"]
-albedo_texture = SubResource("CompressedTexture2D_otibh")
+albedo_texture = ExtResource("2_430ii")
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_430ii"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_b76km"]
-load_path = "res://.godot/imported/texture_01.png-1213a33fb91b4ce36c33be4e2548bcb3.s3tc.ctex"
+material = SubResource("StandardMaterial3D_bsanu")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kftou"]
-albedo_texture = SubResource("CompressedTexture2D_b76km")
+albedo_texture = ExtResource("3_3p42x")
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [node name="MainMenu" type="Node3D"]
 
@@ -82,17 +86,18 @@ font_size = 132
 
 [node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="WorldObjects"]
 transform = Transform3D(13.6546, 0, 0, 0, 1, 0, 0, 0, 13.6546, 0, -0.4995, 0)
-material_override = SubResource("StandardMaterial3D_3clmd")
 mesh = SubResource("ArrayMesh_mlc1t")
 skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_3clmd")
 
 [node name="Camera3D" type="Camera3D" parent="WorldObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.184813, 0.875543, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="WorldObjects"]
 environment = SubResource("Environment_b76km")
 
 [node name="character" type="MeshInstance3D" parent="WorldObjects"]
-transform = Transform3D(0.998562, -0.00377753, -0.053285, 0.000490584, 0.998116, -0.06112, 0.0536102, 0.0612283, 0.99307, -0.0354433, 0.369551, -4.17716)
+transform = Transform3D(0.857222, 0.0311685, 0.51214, 0.000490582, 0.998116, -0.06112, -0.514947, 0.0528365, 0.852491, -2.12464, 0.369551, -4.54435)
 mesh = SubResource("CapsuleMesh_lbqne")
 skeleton = NodePath("../..")
 
@@ -105,16 +110,15 @@ transform = Transform3D(0.075, 0, 0, 0, 0.068, 0, 0, 0, 0.085, 0.135442, 0.55736
 mesh = SubResource("SphereMesh_cruaa")
 
 [node name="Boxes" type="MeshInstance3D" parent="WorldObjects"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.34644, -0.0304491, -4.17716)
-material_override = SubResource("StandardMaterial3D_bsanu")
+transform = Transform3D(0.828383, 0, 0.560162, 0, 1, 0, -0.560162, 0, 0.828383, -3.21065, -0.0304491, -3.80997)
 mesh = SubResource("BoxMesh_430ii")
 skeleton = NodePath("../..")
 
 [node name="Boxes2" type="MeshInstance3D" parent="WorldObjects"]
-transform = Transform3D(18.4229, 0, 0, 0, 14.8982, 0, 0, 0, -0.29508, -0.486985, 0.00197884, -6.90335)
-material_override = SubResource("StandardMaterial3D_kftou")
+transform = Transform3D(23.2939, 0, 0, 0, 14.8982, 0, 0, 0, -0.29508, -0.486985, 0.00197884, -6.90335)
 mesh = SubResource("BoxMesh_430ii")
 skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_kftou")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="WorldObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80217, 0)
@@ -141,13 +145,18 @@ script = ExtResource("4_lbqne")
 
 [node name="MenuPanel" type="Panel" parent="MainMenu"]
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 7
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-offset_left = -131.955
-offset_right = 131.955
-offset_bottom = 141.745
+anchor_bottom = 1.0
+offset_left = -132.71
+offset_top = -141.745
+offset_right = 132.71
 grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1.765, 1.765)
+pivot_offset = Vector2(131.525, 69.945)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/MenuPanel"]
 layout_mode = 1
@@ -178,17 +187,17 @@ text = "Quit"
 [node name="SettingsMenu" type="Panel" parent="MainMenu"]
 visible = false
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -79.312
-offset_top = -10.665
-offset_right = 85.463
-offset_bottom = 93.405
+anchor_bottom = 0.5
+offset_left = -82.3875
+offset_top = -52.035
+offset_right = 82.3875
+offset_bottom = 52.035
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 scale = Vector2(3.655, 3.655)
 pivot_offset = Vector2(80.998, 50.39)
 

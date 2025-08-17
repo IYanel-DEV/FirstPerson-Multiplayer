@@ -1,10 +1,10 @@
 [gd_scene load_steps=14 format=3 uid="uid://d4cpj11iha5uc"]
 
 [ext_resource type="Script" uid="uid://buap128n0gj" path="res://Maps/Scripts/GameMode.gd" id="1_bliyt"]
-[ext_resource type="Texture2D" uid="uid://crwm6gqmfawrv" path="res://Addons/kenney_prototype_textures/dark/texture_03.png" id="2_bliyt"]
-[ext_resource type="Texture2D" uid="uid://b14ea5gv7jltb" path="res://Addons/kenney_prototype_textures/purple/texture_02.png" id="3_4okp1"]
-[ext_resource type="Texture2D" uid="uid://i8s8cmeph6yy" path="res://Addons/kenney_prototype_textures/orange/texture_02.png" id="4_4okp1"]
-[ext_resource type="Script" uid="uid://de4ax627pkk2y" path="res://Maps/PauseMenu.gd" id="5_d7oxw"]
+[ext_resource type="Texture2D" uid="uid://biec8m2uv843c" path="res://Textures/texture_03.png" id="2_d7oxw"]
+[ext_resource type="Texture2D" uid="uid://cwcexiteh4s2q" path="res://Textures/texture_02purpl.png" id="3_l8b2n"]
+[ext_resource type="Texture2D" uid="uid://d0u76ui7ag1at" path="res://Textures/texture_02.png" id="4_abnra"]
+[ext_resource type="Script" uid="uid://de4ax627pkk2y" path="res://Maps/Scripts/PauseMenu.gd" id="5_d7oxw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4okp1"]
 
@@ -22,19 +22,19 @@ sdfgi_enabled = true
 [sub_resource type="BoxMesh" id="BoxMesh_r2ywu"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bliyt"]
-albedo_texture = ExtResource("2_bliyt")
+albedo_texture = ExtResource("2_d7oxw")
 uv1_triplanar = true
 uv1_world_triplanar = true
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_x14v3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d7oxw"]
-albedo_texture = ExtResource("3_4okp1")
+albedo_texture = ExtResource("3_l8b2n")
 uv1_triplanar = true
 uv1_world_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l8b2n"]
-albedo_texture = ExtResource("4_4okp1")
+albedo_texture = ExtResource("4_abnra")
 rim_tint = 1.0
 clearcoat_enabled = true
 ao_enabled = true
@@ -199,7 +199,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu"]
+[node name="PauseContainer" type="VBoxContainer" parent="PauseMenu"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -215,36 +215,36 @@ grow_vertical = 2
 scale = Vector2(1.16, 1.16)
 pivot_offset = Vector2(128.452, 149.51)
 
-[node name="Continue" type="Button" parent="PauseMenu/VBoxContainer"]
+[node name="Continue" type="Button" parent="PauseMenu/PauseContainer"]
 layout_mode = 2
 text = "Continue"
 
-[node name="Settings" type="Button" parent="PauseMenu/VBoxContainer"]
+[node name="Settings" type="Button" parent="PauseMenu/PauseContainer"]
 layout_mode = 2
 text = "Settings"
 
-[node name="BackToMenu" type="Button" parent="PauseMenu/VBoxContainer"]
+[node name="BackToMenu" type="Button" parent="PauseMenu/PauseContainer"]
 layout_mode = 2
 text = "Back To Menu"
 
-[node name="Quit" type="Button" parent="PauseMenu/VBoxContainer"]
+[node name="Quit" type="Button" parent="PauseMenu/PauseContainer"]
 layout_mode = 2
 text = "Quit"
 
 [node name="SettingsMenu" type="Panel" parent="PauseMenu"]
 visible = false
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -79.0
-offset_top = -390.0
-offset_right = 85.775
-offset_bottom = -285.93
+anchor_bottom = 0.5
+offset_left = -82.3875
+offset_top = -52.035
+offset_right = 82.3875
+offset_bottom = 52.035
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 scale = Vector2(3.655, 3.655)
 pivot_offset = Vector2(80.998, 50.39)
 
@@ -307,10 +307,10 @@ layout_mode = 2
 size_flags_vertical = 10
 text = "Back"
 
-[connection signal="pressed" from="PauseMenu/VBoxContainer/Continue" to="PauseMenu" method="_on_continue_pressed"]
-[connection signal="pressed" from="PauseMenu/VBoxContainer/Settings" to="PauseMenu" method="_on_settings_pressed"]
-[connection signal="pressed" from="PauseMenu/VBoxContainer/BackToMenu" to="PauseMenu" method="_on_back_to_menu_pressed"]
-[connection signal="pressed" from="PauseMenu/VBoxContainer/Quit" to="PauseMenu" method="_on_quit_pressed"]
+[connection signal="pressed" from="PauseMenu/PauseContainer/Continue" to="PauseMenu" method="_on_continue_pressed"]
+[connection signal="pressed" from="PauseMenu/PauseContainer/Settings" to="PauseMenu" method="_on_settings_pressed"]
+[connection signal="pressed" from="PauseMenu/PauseContainer/BackToMenu" to="PauseMenu" method="_on_back_to_menu_pressed"]
+[connection signal="pressed" from="PauseMenu/PauseContainer/Quit" to="PauseMenu" method="_on_quit_pressed"]
 [connection signal="toggled" from="PauseMenu/SettingsMenu/VBoxContainer/ResOptionButton" to="PauseMenu" method="_on_res_option_button_toggled"]
 [connection signal="toggled" from="PauseMenu/SettingsMenu/VBoxContainer/FullScreenCheckButton" to="PauseMenu" method="_on_full_screen_check_button_toggled"]
 [connection signal="toggled" from="PauseMenu/SettingsMenu/VBoxContainer/VsyncCheckBox" to="PauseMenu" method="_on_vsync_check_box_toggled"]

@@ -2,14 +2,15 @@
 extends Control
 
 @onready var settings_menu = $SettingsMenu
-@onready var main_menu = $VBoxContainer
+@onready var main_menu = $PauseContainer
 
 var is_paused := false
+var local_player: Node = null
 
 func _ready():
 	# Set to full screen rect
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-	set_offsets_preset(Control.PRESET_FULL_RECT)  # Fixed method name
+	set_offsets_preset(Control.PRESET_FULL_RECT)
 	
 	# Initial visibility
 	visible = false
@@ -19,12 +20,10 @@ func _ready():
 	# Make sure we process input even when paused
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	
-	# Connect buttons safely
-	$VBoxContainer/Continue.pressed.connect(_on_continue_pressed)
-	$VBoxContainer/Settings.pressed.connect(_on_settings_pressed)
-	$VBoxContainer/BackToMenu.pressed.connect(_on_back_to_menu_pressed)
-	$VBoxContainer/Quit.pressed.connect(_on_quit_pressed)
-	$SettingsMenu/VBoxContainer/SettingMenuBack.pressed.connect(_on_setting_menu_back_pressed)
+	# Find local player
+	find_local_player()
+	
+
 	
 	# Connect settings controls
 	if has_node("SettingsMenu/VBoxContainer/MouseSensitivity/Text/Sensitivity"):
@@ -35,24 +34,81 @@ func _ready():
 		$SettingsMenu/VBoxContainer/VsyncCheckBox.toggled.connect(_on_vsync_toggled)
 	if has_node("SettingsMenu/VBoxContainer/ResOptionButton"):
 		$SettingsMenu/VBoxContainer/ResOptionButton.item_selected.connect(_on_resolution_selected)
+	
+	# Initialize settings controls
+	init_settings_controls()
+
+func init_settings_controls():
+	# Only initialize if nodes exist
+	if has_node("SettingsMenu/VBoxContainer/MouseSensitivity/Text/Sensitivity"):
+		$SettingsMenu/VBoxContainer/MouseSensitivity/Text/Sensitivity.value = Settings.settings.get("mouse_sensitivity", 0.002) * 1000
+	
+	if has_node("SettingsMenu/VBoxContainer/FullScreenCheckButton"):
+		$SettingsMenu/VBoxContainer/FullScreenCheckButton.button_pressed = Settings.settings.get("fullscreen", false)
+	
+	if has_node("SettingsMenu/VBoxContainer/VsyncCheckBox"):
+		$SettingsMenu/VBoxContainer/VsyncCheckBox.button_pressed = Settings.settings.get("vsync", true)
+	
+	if has_node("SettingsMenu/VBoxContainer/ResOptionButton"):
+		var res_option = $SettingsMenu/VBoxContainer/ResOptionButton
+		res_option.clear()
+		res_option.add_item("1152x648")
+		res_option.add_item("1280x720")
+		res_option.add_item("1366x768")
+		res_option.add_item("1920x1080")
+		
+		# Set to current resolution
+		var current_res = Settings.settings.get("resolution", Vector2i(1152, 648))
+		var current_res_str = str(current_res.x) + "x" + str(current_res.y)
+		for i in range(res_option.item_count):
+			if res_option.get_item_text(i) == current_res_str:
+				res_option.selected = i
+				break
+
+func find_local_player():
+	# Find the local player in the scene
+	for player in get_tree().get_nodes_in_group("player"):
+		if player.is_multiplayer_authority():
+			local_player = player
+			print("Found local player: ", player.name)
+			break
 
 func _input(event):
 	# Only handle pause input when not in settings menu
-	if event.is_action_pressed("pause") and !settings_menu.visible:
-		toggle_pause_menu()
-		# Consume the event
-		get_viewport().set_input_as_handled()
+	if event.is_action_pressed("pause"):
+		if settings_menu.visible:
+			# If in settings, go back to main pause menu
+			_on_setting_menu_back_pressed()
+			get_viewport().set_input_as_handled()
+		else:
+			toggle_pause_menu()
+			get_viewport().set_input_as_handled()
 
 func toggle_pause_menu():
 	is_paused = !is_paused
 	visible = is_paused
-	get_tree().paused = is_paused
 	
 	if is_paused:
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		# Pause local player - freeze completely
+		if local_player:
+			if local_player.has_method("set_input_enabled"):
+				local_player.set_input_enabled(false)
+		
 		main_menu.visible = true
 		settings_menu.visible = false
+		
+		# Show mouse cursor
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	else:
+		# Resume local player
+		if local_player:
+			if local_player.has_method("set_input_enabled"):
+				local_player.set_input_enabled(true)
+		
+		# Make sure settings menu is closed
+		settings_menu.visible = false
+		
+		# Hide mouse cursor
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _on_continue_pressed():
@@ -70,8 +126,12 @@ func _on_back_to_menu_pressed():
 	if multiplayer.has_multiplayer_peer():
 		multiplayer.multiplayer_peer.close()
 	
-	# Unpause game
-	get_tree().paused = false
+	# Unfreeze player
+	if local_player:
+		if local_player.has_method("set_input_enabled"):
+			local_player.set_input_enabled(true)
+	
+	# Show mouse cursor
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 	# Load main menu
@@ -97,7 +157,11 @@ func _on_vsync_toggled(toggled_on):
 
 func _on_resolution_selected(index):
 	print("Resolution selected: ", index)
-	var res_text = $SettingsMenu/VBoxContainer/ResOptionButton.get_item_text(index)
+	if not has_node("SettingsMenu/VBoxContainer/ResOptionButton"):
+		return
+	
+	var res_option = $SettingsMenu/VBoxContainer/ResOptionButton
+	var res_text = res_option.get_item_text(index)
 	var res_parts = res_text.split("x")
 	if res_parts.size() == 2:
 		var new_res = Vector2i(res_parts[0].to_int(), res_parts[1].to_int())

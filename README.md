@@ -22,9 +22,10 @@
 The **Godot Multiplayer FPS Template** is your gateway to creating competitive or cooperative multiplayer shooters. Built with performance and scalability in mind, this template provides everything you need to jumpstart your FPS project with professional-grade networking and smooth gameplay mechanics.
 
 <div align="center">
-  <img src="https://screenshot.png" alt="Godot FPS Template Screenshot" width="800px" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-  <p><em>Example screenshot placeholder - Your game in action!</em></p>
+  <img src="https://github.com/user-attachments/assets/13cc84dd-43d7-43fc-84b2-55d1b48d7b4f" alt="Godot FPS Template Screenshot" width="800px" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+  <p><em>Example screenshot</em></p>
 </div>
+
 
 ## ✨ Key Features
 

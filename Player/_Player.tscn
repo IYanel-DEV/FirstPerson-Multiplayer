@@ -26,13 +26,22 @@ properties/2/replication_mode = 1
 properties/3/path = NodePath(".:jump_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 1
+properties/4/path = NodePath(".:up_direction")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:position:x")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:position:y")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:position:z")
+properties/7/spawn = true
+properties/7/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D"]
 safe_margin = 0.08
 script = ExtResource("1_cb6jr")
-fov_normal = 80.0
-fov_sprint = 120.0
-sway_smoothness = 4.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.73409, 0)

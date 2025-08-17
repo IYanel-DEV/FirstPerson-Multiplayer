@@ -18,7 +18,6 @@ const STATE_AIRBORNE = 2
 func _ready():
 	player = get_parent()
 
-# In _input() function:
 func _input(event):
 	if not enabled or not player or not player.is_multiplayer_authority():
 		return

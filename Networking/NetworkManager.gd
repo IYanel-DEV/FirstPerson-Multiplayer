@@ -1,3 +1,4 @@
+# NetworkManager.gd
 extends Node
 
 const PORT = 8910
@@ -12,6 +13,10 @@ func _ready():
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
+	
+	# Set physics interpolation for smoother movement
+	Engine.physics_ticks_per_second = 60
+	Engine.max_physics_steps_per_frame = 10
 
 func host_game():
 	var error = peer.create_server(PORT, MAX_PLAYERS)
@@ -73,7 +78,7 @@ func send_player_update(position: Vector3, velocity: Vector3, rotation: Vector3,
 	if multiplayer.multiplayer_peer:
 		rpc("_receive_player_update", position, velocity, rotation, camera_rotation)
 
-@rpc("unreliable", "any_peer")
+@rpc("unreliable_ordered", "any_peer")
 func _receive_player_update(position: Vector3, velocity: Vector3, rotation: Vector3, camera_rotation: Vector3):
 	var sender_id = multiplayer.get_remote_sender_id()
 	player_update_received.emit(sender_id, position, velocity, rotation, camera_rotation)
