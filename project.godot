@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="True First Person Multiplayer"
+config/name="First Person Multiplayer"
 run/main_scene="uid://cw2rwrq4aokcc"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
@@ -70,4 +70,3 @@ pause={
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality.mobile=5
-environment/defaults/default_clear_color=Color(0.3, 0.3, 0.3, 1)
