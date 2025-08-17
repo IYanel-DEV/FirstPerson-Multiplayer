@@ -1,11 +1,123 @@
-[gd_scene load_steps=2 format=3 uid="uid://cw2rwrq4aokcc"]
+[gd_scene load_steps=17 format=4 uid="uid://cw2rwrq4aokcc"]
+
+[ext_resource type="Texture2D" uid="uid://w8d1slxxgjja" path="res://Addons/kenney_prototype-textures/PNG/Dark/texture_02.png" id="1_b76km"]
+[ext_resource type="Texture2D" uid="uid://bghl7ljli20v7" path="res://Addons/kenney_prototype-textures/PNG/Purple/texture_07.png" id="2_lbqne"]
+[ext_resource type="Texture2D" uid="uid://dq74w20itl3sy" path="res://Addons/kenney_prototype-textures/PNG/Dark/texture_01.png" id="3_430ii"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3p42x"]
+albedo_texture = ExtResource("1_b76km")
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_mlc1t"]
-albedo_color = Color(0, 1, 0, 1)
+albedo_color = Color(0.815589, 0.826791, 0.857572, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3clmd"]
+albedo_texture = ExtResource("2_lbqne")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_mlc1t"]
+_surfaces = [{
+"aabb": AABB(-0.5, -0.0005, -0.5, 1, 0.001, 1),
+"attribute_data": PackedByteArray("AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/"),
+"format": 34359738391,
+"material": SubResource("ORMMaterial3D_mlc1t"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 36,
+"vertex_data": PackedByteArray("AAAAv28SA7oAAAA/AAAAv28SA7oAAAC/AAAAv28SAzoAAAC/AAAAP28SA7oAAAC/AAAAv28SA7oAAAC/AAAAv28SA7oAAAA/AAAAv28SAzoAAAC/AAAAv28SA7oAAAC/AAAAP28SA7oAAAC/AAAAv28SAzoAAAC/AAAAv28SAzoAAAA/AAAAv28SA7oAAAA/AAAAv28SA7oAAAA/AAAAv28SAzoAAAA/AAAAP28SAzoAAAA/AAAAP28SAzoAAAA/AAAAv28SAzoAAAA/AAAAv28SAzoAAAC/AAAAv28SA7oAAAA/AAAAP28SA7oAAAA/AAAAP28SA7oAAAC/AAAAP28SAzoAAAA/AAAAP28SA7oAAAA/AAAAv28SA7oAAAA/AAAAP28SA7oAAAC/AAAAP28SA7oAAAA/AAAAP28SAzoAAAA/AAAAP28SA7oAAAC/AAAAP28SAzoAAAC/AAAAv28SAzoAAAC/AAAAv28SAzoAAAC/AAAAP28SAzoAAAC/AAAAP28SAzoAAAA/AAAAP28SAzoAAAA/AAAAP28SAzoAAAC/AAAAP28SA7oAAAC/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//38AAP//AAD/fwAA//8AAP9/AAD//wAA/////wAA/z//////AAD/P/////8AAP8/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//3//fwAA/z//f/9/AAD/P/9//38AAP8//3//////AAD/f/////8AAP9//////wAA/38AAP//AAD/fwAA//8AAP9/AAD//wAA/3//fwAA/z//f/9/AAD/P/9//38AAP8/////f/9//n////9//3/+f////3//f/5//////wAA/z//////AAD/P/////8AAP8//3//////AAD/f/////8AAP9//////wAA////f/9//n////9//3/+f////3//f/5/")
+}]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_otibh"]
+
+[sub_resource type="Sky" id="Sky_cruaa"]
+sky_material = SubResource("ProceduralSkyMaterial_otibh")
+
+[sub_resource type="Environment" id="Environment_b76km"]
+background_mode = 2
+sky = SubResource("Sky_cruaa")
+tonemap_mode = 1
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_enabled = true
+glow_enabled = true
+fog_enabled = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lbqne"]
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_otibh"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_cruaa"]
+material = SubResource("ORMMaterial3D_otibh")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bsanu"]
+albedo_texture = ExtResource("1_b76km")
+
+[sub_resource type="BoxMesh" id="BoxMesh_430ii"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kftou"]
+albedo_texture = ExtResource("3_430ii")
 
 [node name="MainMenu" type="Node3D"]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(13.6546, 0, 0, 0, 1, 0, 0, 0, 13.6546, 0, -0.4995, 0)
+material_override = SubResource("StandardMaterial3D_3p42x")
 size = Vector3(1, 0.001, 1)
 material = SubResource("ORMMaterial3D_mlc1t")
+
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(13.6546, 0, 0, 0, 1, 0, 0, 0, 13.6546, 0, -0.4995, 0)
+material_override = SubResource("StandardMaterial3D_3clmd")
+mesh = SubResource("ArrayMesh_mlc1t")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.954937, 0.296808, 0, -0.296808, 0.954937, -0.336615, 1.64144, -1.47873)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_b76km")
+
+[node name="character" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.992104, 0.028288, -0.121745, 0, 0.974232, 0.224729, 0.12542, -0.223765, 0.963036, -0.0354433, 0.369551, -4.17716)
+mesh = SubResource("CapsuleMesh_lbqne")
+
+[node name="eye1" type="MeshInstance3D" parent="character"]
+transform = Transform3D(0.075, 0, 0, 0, 0.068, 0, 0, 0, 0.085, -0.114635, 0.557369, 0.483426)
+mesh = SubResource("SphereMesh_cruaa")
+
+[node name="eye2" type="MeshInstance3D" parent="character"]
+transform = Transform3D(0.075, 0, 0, 0, 0.068, 0, 0, 0, 0.085, 0.135442, 0.557369, 0.483426)
+mesh = SubResource("SphereMesh_cruaa")
+
+[node name="Boxes" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.34644, -0.0304491, -4.17716)
+material_override = SubResource("StandardMaterial3D_bsanu")
+mesh = SubResource("BoxMesh_430ii")
+
+[node name="Boxes2" type="MeshInstance3D" parent="."]
+transform = Transform3D(18.4229, 0, 0, 0, 14.8982, 0, 0, 0, -0.29508, -0.486985, 0.00197884, -6.90335)
+material_override = SubResource("StandardMaterial3D_kftou")
+mesh = SubResource("BoxMesh_430ii")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 576.0
+offset_top = 324.0
+offset_right = -576.0
+offset_bottom = -324.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 577.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(289.075, 161.3)

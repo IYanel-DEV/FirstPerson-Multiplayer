@@ -1,7 +1,6 @@
-[gd_scene load_steps=16 format=3 uid="uid://d4cpj11iha5uc"]
+[gd_scene load_steps=15 format=3 uid="uid://d4cpj11iha5uc"]
 
 [ext_resource type="Texture2D" uid="uid://bx5bxv3hnysq" path="res://Addons/kenney_prototype-textures/Vector/texture_01.svg" id="1_qeql7"]
-[ext_resource type="PackedScene" uid="uid://cmov2y6h564hu" path="res://Player/_Player.tscn" id="1_x14v3"]
 [ext_resource type="Texture2D" uid="uid://crgevtubvefni" path="res://Addons/kenney_prototype-textures/Vector/texture_02.svg" id="2_bliyt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x14v3"]
@@ -260,6 +259,3 @@ material_override = SubResource("StandardMaterial3D_l8b2n")
 material_overlay = SubResource("StandardMaterial3D_abnra")
 mesh = SubResource("BoxMesh_vlg06")
 surface_material_override/0 = SubResource("StandardMaterial3D_1pdtc")
-
-[node name="Player" parent="." instance=ExtResource("1_x14v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.14749, 1.59472, -2.00153)

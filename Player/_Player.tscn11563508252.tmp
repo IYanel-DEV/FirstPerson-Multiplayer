@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://cmov2y6h564hu"]
+
+[ext_resource type="Script" uid="uid://ba5s5f24vha8o" path="res://Player/Scripts/Player.gd" id="1_cb6jr"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hegmd"]
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_cb6jr"]
+albedo_color = Color(0.542047, 0.754258, 0.999828, 1)
+grow_amount = -1.934
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fkuj8"]
+material = SubResource("ORMMaterial3D_cb6jr")
+
+[node name="Player" type="CharacterBody3D"]
+safe_margin = 0.08
+script = ExtResource("1_cb6jr")
+walk_speed = null
+sprint_speed = null
+jump_velocity = null
+ground_acceleration = null
+ground_deceleration = null
+air_control = null
+network_update_rate = null
+network_interpolation = null
+prediction_enabled = null
+mouse_sensitivity = null
+camera_tilt_amount = null
+fov_normal = 80.0
+fov_sprint = 120.0
+bob_frequency = null
+bob_amplitude = null
+sway_smoothness = 4.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.73409, 0)
+
+[node name="HeadPosition" type="Node3D" parent="Camera3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_hegmd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_fkuj8")
+
+[node name="FloorRay" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.962343, 0)
+target_position = Vector3(0, -0.2, 0)
+
+[node name="StandCheck" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.351917, 0)
+target_position = Vector3(0, 0.2, 0)
+collide_with_areas = true
