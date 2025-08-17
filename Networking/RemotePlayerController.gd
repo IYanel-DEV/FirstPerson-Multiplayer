@@ -1,12 +1,13 @@
+# RemotePlayerController.gd
 extends Node
-class_name RemotePlayerController
 
 # Interpolation settings
 const SMOOTHING_TIME = 0.15  # 150ms smoothing
 const MAX_EXTRAPOLATION = 0.2  # 200ms max
 
 # References
-@onready var player: Player = get_parent()
+var player: Node = null  # Will be set to Player node
+var enabled: bool = false
 
 # Network data
 var position_history = []
@@ -14,14 +15,19 @@ var rotation_history = []
 var camera_rotation_history = []
 var velocity_history = []
 var timestamp_history = []
-var enabled: bool = false
 
 func _ready():
+	player = get_parent()
+	
 	if enabled:
-		NetworkManager.player_update_received.connect(_on_player_update_received)
+		# Connect to network manager if it exists
+		if has_node("/root/NetworkManager"):
+			var network_manager = get_node("/root/NetworkManager")
+			if network_manager.has_signal("player_update_received"):
+				network_manager.player_update_received.connect(_on_player_update_received)
 
 func _on_player_update_received(peer_id, position, velocity, rotation, camera_rotation):
-	if peer_id != player.get_multiplayer_authority():
+	if !player || peer_id != player.get_multiplayer_authority():
 		return
 	
 	# Store update with current time
@@ -41,7 +47,7 @@ func _on_player_update_received(peer_id, position, velocity, rotation, camera_ro
 		timestamp_history.pop_front()
 
 func _physics_process(delta):
-	if not enabled:
+	if !enabled || !player:
 		return
 	interpolate_movement(delta)
 
@@ -102,8 +108,11 @@ func interpolate_movement(delta):
 	var smoothing_factor = clamp(delta * 20.0, 0.0, 1.0)
 	player.global_position = player.global_position.lerp(target_pos, smoothing_factor)
 	player.rotation = player.rotation.lerp(target_rot, smoothing_factor)
-	if player.camera:
-		player.camera.rotation = player.camera.rotation.lerp(target_cam_rot, smoothing_factor)
+	
+	# Apply camera rotation if camera exists
+	if player.has_node("Camera3D"):
+		var camera = player.get_node("Camera3D")
+		camera.rotation = camera.rotation.lerp(target_cam_rot, smoothing_factor)
 	
 	# Update velocity
 	player.velocity = velocity_history[prev_index].lerp(

@@ -2,20 +2,69 @@
 extends Control
 
 func _ready():
-	if !$MenuPanel/VBoxContainer/Host.is_connected("pressed", _on_host_pressed):
-		$MenuPanel/VBoxContainer/Host.connect("pressed", _on_host_pressed)
+	# Load settings
+	Settings.load_settings()
 	
-	if !$MenuPanel/VBoxContainer/Join.is_connected("pressed", _on_join_pressed):
-		$MenuPanel/VBoxContainer/Join.connect("pressed", _on_join_pressed)
+	# Initial visibility
+	$MenuPanel.show()
+	$SettingsMenu.hide()
 	
-	if !$MenuPanel/VBoxContainer/Settings.is_connected("pressed", _on_settings_pressed):
-		$MenuPanel/VBoxContainer/Settings.connect("pressed", _on_settings_pressed)
+	# Connect main menu buttons with checks
+	if not $MenuPanel/VBoxContainer/Host.pressed.is_connected(_on_host_pressed):
+		$MenuPanel/VBoxContainer/Host.pressed.connect(_on_host_pressed)
 	
-	if !$MenuPanel/VBoxContainer/Quit.is_connected("pressed", _on_quit_pressed):
-		$MenuPanel/VBoxContainer/Quit.connect("pressed", _on_quit_pressed)
+	if not $MenuPanel/VBoxContainer/Join.pressed.is_connected(_on_join_pressed):
+		$MenuPanel/VBoxContainer/Join.pressed.connect(_on_join_pressed)
 	
-	if !$SettingsMenu/VBoxContainer/SettingMenuBack.is_connected("pressed", _on_setting_menu_back_pressed):
-		$SettingsMenu/VBoxContainer/SettingMenuBack.connect("pressed", _on_setting_menu_back_pressed)
+	if not $MenuPanel/VBoxContainer/Settings.pressed.is_connected(_on_settings_pressed):
+		$MenuPanel/VBoxContainer/Settings.pressed.connect(_on_settings_pressed)
+	
+	if not $MenuPanel/VBoxContainer/Quit.pressed.is_connected(_on_quit_pressed):
+		$MenuPanel/VBoxContainer/Quit.pressed.connect(_on_quit_pressed)
+	
+	# Connect settings menu buttons with checks
+	if not $SettingsMenu/VBoxContainer/SettingMenuBack.pressed.is_connected(_on_setting_menu_back_pressed):
+		$SettingsMenu/VBoxContainer/SettingMenuBack.pressed.connect(_on_setting_menu_back_pressed)
+	
+	# Connect settings controls with checks
+	if has_node("SettingsMenu/VBoxContainer/MouseSensitivity/Text/Sensitivity"):
+		var sensitivity_slider = $SettingsMenu/VBoxContainer/MouseSensitivity/Text/Sensitivity
+		if not sensitivity_slider.value_changed.is_connected(_on_sensitivity_changed):
+			sensitivity_slider.value_changed.connect(_on_sensitivity_changed)
+		sensitivity_slider.value = Settings.settings.get("mouse_sensitivity", 0.002) * 1000
+	
+	if has_node("SettingsMenu/VBoxContainer/FullScreenCheckButton"):
+		var fullscreen_check = $SettingsMenu/VBoxContainer/FullScreenCheckButton
+		if not fullscreen_check.toggled.is_connected(_on_fullscreen_toggled):
+			fullscreen_check.toggled.connect(_on_fullscreen_toggled)
+		fullscreen_check.button_pressed = Settings.settings.get("fullscreen", false)
+	
+	if has_node("SettingsMenu/VBoxContainer/VsyncCheckBox"):
+		var vsync_check = $SettingsMenu/VBoxContainer/VsyncCheckBox
+		if not vsync_check.toggled.is_connected(_on_vsync_toggled):
+			vsync_check.toggled.connect(_on_vsync_toggled)
+		vsync_check.button_pressed = Settings.settings.get("vsync", true)
+	
+	if has_node("SettingsMenu/VBoxContainer/ResOptionButton"):
+		var res_option = $SettingsMenu/VBoxContainer/ResOptionButton
+		if not res_option.item_selected.is_connected(_on_resolution_selected):
+			res_option.item_selected.connect(_on_resolution_selected)
+		
+		# Add common resolutions
+		res_option.clear()
+		res_option.add_item("1152x648")
+		res_option.add_item("1280x720")
+		res_option.add_item("1366x768")
+		res_option.add_item("1920x1080")
+		
+		# Set to current resolution
+		var current_res = Settings.settings.get("resolution", Vector2i(1152, 648))
+		var current_res_str = str(current_res.x) + "x" + str(current_res.y)
+		for i in range(res_option.item_count):
+			if res_option.get_item_text(i) == current_res_str:
+				res_option.selected = i
+				break
+
 
 func _on_host_pressed():
 	$MenuPanel/VBoxContainer/Host.disabled = true
@@ -28,39 +77,33 @@ func _on_join_pressed():
 		$MenuPanel/VBoxContainer/Join.disabled = false
 
 func _on_settings_pressed():
+	$MenuPanel.hide()
 	$SettingsMenu.show()
 
 func _on_quit_pressed():
 	get_tree().quit()
 
 func _on_sensitivity_changed(value):
-	if multiplayer.has_multiplayer_peer():
-		for player in get_tree().get_nodes_in_group("player"):
-			if player.is_multiplayer_authority():
-				player.mouse_sensitivity = value
+	# Convert slider value to sensitivity
+	var new_sensitivity = value / 1000.0
+	Settings.set_setting("mouse_sensitivity", new_sensitivity)
 
 func _on_fullscreen_toggled(toggled_on):
-	if toggled_on:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-	else:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	Settings.set_setting("fullscreen", toggled_on)
 
 func _on_vsync_toggled(toggled_on):
-	if toggled_on:
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-	else:
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	Settings.set_setting("vsync", toggled_on)
 
-func _on_aa_option_selected(index):
-	var viewport = get_viewport()
-	match index:
-		0: viewport.msaa_3d = Viewport.MSAA_DISABLED
-		1: viewport.msaa_3d = Viewport.MSAA_2X
-		2: viewport.msaa_3d = Viewport.MSAA_4X
-		3: viewport.msaa_3d = Viewport.MSAA_8X
+func _on_resolution_selected(index):
+	var res_text = $SettingsMenu/VBoxContainer/ResOptionButton.get_item_text(index)
+	var res_parts = res_text.split("x")
+	if res_parts.size() == 2:
+		var new_res = Vector2i(res_parts[0].to_int(), res_parts[1].to_int())
+		Settings.set_setting("resolution", new_res)
 
-func _on_setting_menu_back_pressed() -> void:
+func _on_setting_menu_back_pressed():
 	$SettingsMenu.hide()
+	$MenuPanel.show()
 
 func show_error(message: String):
 	print("Error: ", message)

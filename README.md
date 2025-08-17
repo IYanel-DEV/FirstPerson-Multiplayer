@@ -141,17 +141,17 @@ func join_game(address: String):
 ## 🏗️ Architecture
 
 ```mermaid
-graph TB
-	A[Client Input] --> B[Local Controller]
-	B --> C[Network Manager]
-	C --> D[Server Authority]
-	D --> E[State Synchronization]
-	E --> F[Remote Controllers]
-	F --> G[Visual Updates]
-	
-	style A fill:#e1f5fe
-	style D fill:#fff3e0
-	style G fill:#e8f5e8
+graph LR
+	A[Main Menu] --> B[Network Manager]
+	B --> C{Server/Client}
+	C -->|Host| D[Game Mode]
+	C -->|Join| E[Player Controller]
+	D --> F[Player Spawner]
+	E --> G[Network Sync]
+	F --> H[Player Instance]
+	G --> H
+	H --> I[Local Controller]
+	H --> J[Remote Controller]
 ```
 
 ### **Core Components**
