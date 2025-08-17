@@ -1,4 +1,4 @@
-# 🎯 Godot Multiplayer FPS Template
+# 🎯 Godot Multiplayer FPS Template  <img width="1024" height="1024" alt="Icon" src="https://github.com/user-attachments/assets/433b399c-858e-4191-9b41-db43bad45067" />
 
 <div align="center">
 
