@@ -4,6 +4,9 @@ const PORT = 8910
 const MAX_PLAYERS = 4
 var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 
+# Signals
+signal player_update_received(peer_id, position, velocity, rotation, camera_rotation)
+
 func _ready():
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -14,6 +17,7 @@ func host_game():
 	var error = peer.create_server(PORT, MAX_PLAYERS)
 	if error:
 		print("Host error: ", error)
+		show_connection_error()
 		return false
 	
 	multiplayer.multiplayer_peer = peer
@@ -34,51 +38,42 @@ func join_game(ip: String = "localhost"):
 
 func show_connection_error():
 	print("Failed to connect to server")
-	# Show error message in UI
 	get_tree().call_group("ui", "show_error", "Connection failed. Make sure host is running.")
 
 func load_game_world():
-	get_tree().change_scene_to_file("res://Maps/GameMode.tscn")
+	if get_tree().current_scene.name != "GameMode":
+		get_tree().change_scene_to_file("res://Maps/GameMode.tscn")
 
-# This will be called by the GameMode scene after it's loaded
-func spawn_all_players():
-	for id in multiplayer.get_peers():
-		spawn_player(id)
-	spawn_player(multiplayer.get_unique_id())
+@rpc("any_peer", "call_local", "reliable")
+func rpc_load_game_world():
+	if multiplayer.is_server():
+		load_game_world()
 
 func _on_peer_connected(id):
 	print("Player connected: ", id)
-	# Wait for the game world to spawn players
-	if get_tree().current_scene.name == "GameMode":
-		spawn_player(id)
+	if multiplayer.is_server():
+		rpc_load_game_world.rpc_id(id)
 
 func _on_peer_disconnected(id):
 	print("Player disconnected: ", id)
-	delete_player(id)
+	var game_scene = get_tree().current_scene
+	if game_scene and game_scene.has_method("remove_player"):
+		game_scene.remove_player(id)
 
 func _on_connected_to_server():
 	print("Successfully connected to server")
-	# Players will be spawned by the GameMode scene
+	load_game_world()
 
 func _on_connection_failed():
 	print("Connection failed")
 	show_connection_error()
 
-func spawn_player(id):
-	var player = preload("res://Player/_Player.tscn").instantiate()
-	player.name = str(id)
-	
-	# Add player to the current scene
-	var current_scene = get_tree().current_scene
-	if current_scene and current_scene.name == "GameMode":
-		current_scene.add_child(player)
-	else:
-		get_tree().root.add_child(player)
-	
-	if id == multiplayer.get_unique_id():
-		player.set_multiplayer_authority(id)
+# Player update functions
+func send_player_update(position: Vector3, velocity: Vector3, rotation: Vector3, camera_rotation: Vector3):
+	if multiplayer.multiplayer_peer:
+		rpc("_receive_player_update", position, velocity, rotation, camera_rotation)
 
-func delete_player(id):
-	var player = get_tree().root.get_node_or_null(str(id))
-	if player:
-		player.queue_free()
+@rpc("unreliable", "any_peer")
+func _receive_player_update(position: Vector3, velocity: Vector3, rotation: Vector3, camera_rotation: Vector3):
+	var sender_id = multiplayer.get_remote_sender_id()
+	player_update_received.emit(sender_id, position, velocity, rotation, camera_rotation)

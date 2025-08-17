@@ -1,6 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmov2y6h564hu"]
+[gd_scene load_steps=8 format=3 uid="uid://cmov2y6h564hu"]
 
 [ext_resource type="Script" uid="uid://ba5s5f24vha8o" path="res://Player/Scripts/Player.gd" id="1_cb6jr"]
+[ext_resource type="Script" uid="uid://x7jvc2jhq42u" path="res://Player/Scripts/LocalPlayerController.gd" id="2_luh4h"]
+[ext_resource type="Script" uid="uid://d28ggpbcl23fi" path="res://Networking/RemotePlayerController.gd" id="3_kshrv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hegmd"]
 
@@ -10,6 +12,20 @@ grow_amount = -1.934
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_fkuj8"]
 material = SubResource("ORMMaterial3D_cb6jr")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cb6jr"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Camera3D:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:jump_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D"]
 safe_margin = 0.08
@@ -37,3 +53,14 @@ target_position = Vector3(0, -0.2, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.351917, 0)
 target_position = Vector3(0, 0.2, 0)
 collide_with_areas = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.05
+delta_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_cb6jr")
+
+[node name="LocalPlayerController" type="Node" parent="."]
+script = ExtResource("2_luh4h")
+
+[node name="RemotePlayerController" type="Node" parent="."]
+script = ExtResource("3_kshrv")
