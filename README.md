@@ -1,5 +1,7 @@
-# 🎯 Godot Multiplayer FPS Template
-
+# 🎯 Godot Multiplayer FPS Template  
+<div align="center">
+<img width="128" height="128" alt="Icon" src="https://github.com/user-attachments/assets/433b399c-858e-4191-9b41-db43bad45067" />
+</div>
 <div align="center">
 
 ![Godot Engine](https://img.shields.io/badge/Godot-4.4.1+-478cbf?style=for-the-badge&logo=godot-engine&logoColor=white)
