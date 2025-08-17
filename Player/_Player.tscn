@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cmov2y6h564hu"]
+[gd_scene load_steps=5 format=3 uid="uid://cmov2y6h564hu"]
 
 [ext_resource type="Script" uid="uid://ba5s5f24vha8o" path="res://Player/Scripts/Player.gd" id="1_cb6jr"]
 
@@ -11,18 +11,12 @@ grow_amount = -1.934
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_fkuj8"]
 material = SubResource("ORMMaterial3D_cb6jr")
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cb6jr"]
-properties/0/path = NodePath(".:position")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:rotation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-
 [node name="Player" type="CharacterBody3D"]
 safe_margin = 0.08
 script = ExtResource("1_cb6jr")
-jump_velocity = 10.05
+fov_normal = 80.0
+fov_sprint = 120.0
+sway_smoothness = 4.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.73409, 0)
@@ -35,16 +29,11 @@ shape = SubResource("CapsuleShape3D_hegmd")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_fkuj8")
 
-[node name="Checkers" type="Node" parent="."]
-
-[node name="FloorRay" type="RayCast3D" parent="Checkers"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.887084, 0)
+[node name="FloorRay" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.962343, 0)
 target_position = Vector3(0, -0.2, 0)
 
-[node name="StandCheck" type="RayCast3D" parent="Checkers"]
-target_position = Vector3(0, 0, 0)
-hit_from_inside = true
+[node name="StandCheck" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.351917, 0)
+target_position = Vector3(0, 0.2, 0)
 collide_with_areas = true
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_cb6jr")
