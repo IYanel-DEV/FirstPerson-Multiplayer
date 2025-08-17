@@ -89,7 +89,8 @@ var debug_info := {
 func _ready():
 	# Set multiplayer authority based on node name (assuming name is peer ID)
 	set_multiplayer_authority(str(name).to_int())
-	
+	# Add player to a group for easy access
+	add_to_group("player")
 	# Only capture mouse and enable camera for local player
 	if is_multiplayer_authority():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -127,7 +128,7 @@ func _physics_process(delta):
 	if is_multiplayer_authority():
 		process_local_movement(delta)
 	else:
-		process_remote_movement(delta)  # FIXED: Removed assignment operator
+		process_remote_movement(delta)
 	
 	# Apply movement
 	move_and_slide()
@@ -144,7 +145,8 @@ func _physics_process(delta):
 		last_sync_time = network_clock
 	
 	# Update debug info
-	update_debug_info(delta)  # FIXED: Removed assignment operator
+	update_debug_info()  # No parameter now
+
 
 func process_local_movement(delta):
 	# Get and process input
@@ -317,7 +319,8 @@ func _update_rotation(body_rot: Vector3, cam_rot: Vector3):
 func _set_jump_buffer(value: float):
 	jump_buffer_timer = value
 
-func update_debug_info(_delta):
+# Remove the parameter from this function
+func update_debug_info():  # Removed _delta parameter
 	debug_info.position = global_position
 	debug_info.velocity = velocity
 	debug_info.is_on_floor = is_on_floor()

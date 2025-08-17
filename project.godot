@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="True First Person Multiplayer"
-run/main_scene="uid://d4cpj11iha5uc"
+run/main_scene="uid://cw2rwrq4aokcc"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+NetworkManager="*res://Networking/NetworkManager.gd"
 
 [input]
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=17 format=4 uid="uid://cw2rwrq4aokcc"]
+[gd_scene load_steps=18 format=4 uid="uid://cw2rwrq4aokcc"]
 
 [ext_resource type="Texture2D" uid="uid://w8d1slxxgjja" path="res://Addons/kenney_prototype-textures/PNG/Dark/texture_02.png" id="1_b76km"]
 [ext_resource type="Texture2D" uid="uid://bghl7ljli20v7" path="res://Addons/kenney_prototype-textures/PNG/Purple/texture_07.png" id="2_lbqne"]
 [ext_resource type="Texture2D" uid="uid://dq74w20itl3sy" path="res://Addons/kenney_prototype-textures/PNG/Dark/texture_01.png" id="3_430ii"]
+[ext_resource type="Script" uid="uid://yxesc61whepc" path="res://MainMenu/Scripts/MainMenu.gd" id="4_lbqne"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3p42x"]
 albedo_texture = ExtResource("1_b76km")
@@ -59,47 +60,58 @@ albedo_texture = ExtResource("3_430ii")
 
 [node name="MainMenu" type="Node3D"]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="WorldObjects" type="Node" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="WorldObjects"]
 transform = Transform3D(13.6546, 0, 0, 0, 1, 0, 0, 0, 13.6546, 0, -0.4995, 0)
 material_override = SubResource("StandardMaterial3D_3p42x")
 size = Vector3(1, 0.001, 1)
 material = SubResource("ORMMaterial3D_mlc1t")
 
-[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="TextInWorld" type="Label3D" parent="WorldObjects"]
+transform = Transform3D(1.29687, 0, 0, 0, 0.997545, -0.00983722, 0, 0.00983722, 0.997545, 0.482055, 2.69145, -6.75206)
+text = "First Person Multiplayer"
+font_size = 132
+
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="WorldObjects"]
 transform = Transform3D(13.6546, 0, 0, 0, 1, 0, 0, 0, 13.6546, 0, -0.4995, 0)
 material_override = SubResource("StandardMaterial3D_3clmd")
 mesh = SubResource("ArrayMesh_mlc1t")
+skeleton = NodePath("../..")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.954937, 0.296808, 0, -0.296808, 0.954937, -0.336615, 1.64144, -1.47873)
+[node name="Camera3D" type="Camera3D" parent="WorldObjects"]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="WorldObjects"]
 environment = SubResource("Environment_b76km")
 
-[node name="character" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.992104, 0.028288, -0.121745, 0, 0.974232, 0.224729, 0.12542, -0.223765, 0.963036, -0.0354433, 0.369551, -4.17716)
+[node name="character" type="MeshInstance3D" parent="WorldObjects"]
+transform = Transform3D(0.998562, -0.00377753, -0.053285, 0.000490584, 0.998116, -0.06112, 0.0536102, 0.0612283, 0.99307, -0.0354433, 0.369551, -4.17716)
 mesh = SubResource("CapsuleMesh_lbqne")
+skeleton = NodePath("../..")
 
-[node name="eye1" type="MeshInstance3D" parent="character"]
+[node name="eye1" type="MeshInstance3D" parent="WorldObjects/character"]
 transform = Transform3D(0.075, 0, 0, 0, 0.068, 0, 0, 0, 0.085, -0.114635, 0.557369, 0.483426)
 mesh = SubResource("SphereMesh_cruaa")
 
-[node name="eye2" type="MeshInstance3D" parent="character"]
+[node name="eye2" type="MeshInstance3D" parent="WorldObjects/character"]
 transform = Transform3D(0.075, 0, 0, 0, 0.068, 0, 0, 0, 0.085, 0.135442, 0.557369, 0.483426)
 mesh = SubResource("SphereMesh_cruaa")
 
-[node name="Boxes" type="MeshInstance3D" parent="."]
+[node name="Boxes" type="MeshInstance3D" parent="WorldObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.34644, -0.0304491, -4.17716)
 material_override = SubResource("StandardMaterial3D_bsanu")
 mesh = SubResource("BoxMesh_430ii")
+skeleton = NodePath("../..")
 
-[node name="Boxes2" type="MeshInstance3D" parent="."]
+[node name="Boxes2" type="MeshInstance3D" parent="WorldObjects"]
 transform = Transform3D(18.4229, 0, 0, 0, 14.8982, 0, 0, 0, -0.29508, -0.486985, 0.00197884, -6.90335)
 material_override = SubResource("StandardMaterial3D_kftou")
 mesh = SubResource("BoxMesh_430ii")
+skeleton = NodePath("../..")
 
-[node name="Control" type="Control" parent="."]
+[node name="MainMenu" type="Control" parent="."]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 576.0
@@ -108,16 +120,139 @@ offset_right = -576.0
 offset_bottom = -324.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("4_lbqne")
 
-[node name="BoxContainer" type="BoxContainer" parent="Control"]
+[node name="MenuPanel" type="Panel" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -131.955
+offset_right = 131.955
+offset_bottom = 141.745
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/MenuPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -127.5
+offset_right = 127.5
+offset_bottom = 255.0
+grow_horizontal = 2
+
+[node name="Host" type="Button" parent="MainMenu/MenuPanel/VBoxContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="MainMenu/MenuPanel/VBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[node name="Settings" type="Button" parent="MainMenu/MenuPanel/VBoxContainer"]
+layout_mode = 2
+text = "Settings"
+
+[node name="Quit" type="Button" parent="MainMenu/MenuPanel/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[node name="SettingsMenu" type="Panel" parent="MainMenu"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -82.3875
+offset_top = -104.07
+offset_right = 82.3875
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(3.655, 3.655)
+pivot_offset = Vector2(80.998, 50.39)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/SettingsMenu"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_right = 577.0
-offset_bottom = 324.0
+offset_left = -163.253
+offset_top = -87.0951
+offset_right = 203.767
+offset_bottom = 139.33
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(289.075, 161.3)
+scale = Vector2(0.44, 0.44)
+pivot_offset = Vector2(147.155, 65.355)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 39.85
+
+[node name="OptionButton" type="OptionButton" parent="MainMenu/SettingsMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="MainMenu/SettingsMenu/VBoxContainer"]
+layout_mode = 2
+text = "FullScreen"
+
+[node name="CheckBox" type="CheckBox" parent="MainMenu/SettingsMenu/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "is a graphics technology designed to synchronize the frame rate output of a computer's graphics card with the refresh rate of the monitor"
+text = "Vsync?"
+alignment = 2
+
+[node name="Label" type="Label" parent="MainMenu/SettingsMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Keyboard and Mouse settings"
+
+[node name="MouseSensitivity" type="VBoxContainer" parent="MainMenu/SettingsMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Text" type="Label" parent="MainMenu/SettingsMenu/VBoxContainer/MouseSensitivity"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Sensitivity"
+vertical_alignment = 1
+
+[node name="Sensitivity" type="HSlider" parent="MainMenu/SettingsMenu/VBoxContainer/MouseSensitivity/Text"]
+layout_mode = 2
+offset_left = 94.285
+offset_top = 4.685
+offset_right = 365.085
+offset_bottom = 20.685
+pivot_offset = Vector2(0, 7.37)
+
+[node name="SettingMenuBack" type="Button" parent="MainMenu/SettingsMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+text = "Back"
+
+[node name="Version" type="Label" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -86.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.911564, 0.779469)
+theme_override_font_sizes/font_size = 16
+text = "Version 0.1"
+
+[connection signal="pressed" from="MainMenu/MenuPanel/VBoxContainer/Host" to="MainMenu" method="_on_host_pressed"]
+[connection signal="pressed" from="MainMenu/MenuPanel/VBoxContainer/Join" to="MainMenu" method="_on_join_pressed"]
+[connection signal="pressed" from="MainMenu/MenuPanel/VBoxContainer/Settings" to="MainMenu" method="_on_settings_pressed"]
+[connection signal="pressed" from="MainMenu/MenuPanel/VBoxContainer/Quit" to="MainMenu" method="_on_quit_pressed"]
+[connection signal="item_selected" from="MainMenu/SettingsMenu/VBoxContainer/OptionButton" to="MainMenu" method="_on_option_button_item_selected"]
+[connection signal="toggled" from="MainMenu/SettingsMenu/VBoxContainer/CheckButton" to="MainMenu" method="_on_check_button_toggled"]
+[connection signal="toggled" from="MainMenu/SettingsMenu/VBoxContainer/CheckBox" to="MainMenu" method="_on_check_box_toggled"]
+[connection signal="changed" from="MainMenu/SettingsMenu/VBoxContainer/MouseSensitivity/Text/Sensitivity" to="MainMenu" method="_on_sensitivity_changed"]
+[connection signal="pressed" from="MainMenu/SettingsMenu/VBoxContainer/SettingMenuBack" to="MainMenu" method="_on_setting_menu_back_pressed"]
