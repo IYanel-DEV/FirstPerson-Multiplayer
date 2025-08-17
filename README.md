@@ -35,7 +35,7 @@ The **Godot Multiplayer FPS Template** is your gateway to creating competitive o
 
 - **🏃 Advanced FPS Movement**: Sprinting, jumping, and air control with physics-based momentum
 - **🖱️ Precision Mouse Look**: Adjustable sensitivity with smooth camera controls  
-- **📷 Immersive Camera Effects**: Dynamic FOV changes, weapon sway, and tilt effects
+- **📷 Immersive Camera Effects**: Dynamic FOV changes,camera sway, and tilt effects
 - **⚡ Responsive Controls**: Coyote time and jump buffering for fluid gameplay
 - **🎯 Frame-Rate Independence**: Consistent movement regardless of FPS
 
