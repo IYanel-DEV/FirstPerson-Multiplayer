@@ -223,4 +223,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 [Report Bug](https://github.com/yourusername/godot-multiplayer-fps-template/issues) • [Request Feature](https://github.com/yourusername/godot-multiplayer-fps-template/issues) • [Join Discord](https://discord.gg/your-discord)
 
+For the Map assets i used kenney aassets 
+https://www.kenney.nl/assets/prototype-textures
+
 </div>
