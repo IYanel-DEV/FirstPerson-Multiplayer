@@ -1,8 +1,7 @@
-[gd_scene load_steps=28 format=3 uid="uid://djayojv8ndd4t"]
+[gd_scene load_steps=38 format=3 uid="uid://djayojv8ndd4t"]
 
 [ext_resource type="Script" uid="uid://ldpdegbla2a2" path="res://Weapons/Pistol/Pistol.gd" id="1_c0qr3"]
 [ext_resource type="PackedScene" uid="uid://bnjdfm548w4ye" path="res://Weapons/Pistol/Pistol.glb" id="1_wl3ew"]
-[ext_resource type="AudioStream" uid="uid://2e8xwgm0pgr1" path="res://Weapons/Pistol/Bullet/pistol-shot-233473.ogg" id="3_jb0rd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wl3ew"]
 
@@ -467,65 +466,96 @@ _data = {
 &"Shoot": SubResource("Animation_jb0rd")
 }
 
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_c0qr3"]
-
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_jb0rd"]
-
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wbbrg"]
-animation = &"Aim_Hold"
+animation = &"Aim"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_q3kbv"]
-animation = &"Aim_Hold_Shoot"
+animation = &"Aim_Hold"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vxp0s"]
+animation = &"Aim_Hold_Shoot"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_c0qr3"]
 animation = &"Idle"
-use_custom_timeline = true
-timeline_length = 5.0
-stretch_time_scale = true
-start_offset = 0.0
-loop_mode = 0
 
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_8ywd3"]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6ajsu"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jb0rd"]
 animation = &"Move"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x83w5"]
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_wbbrg"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_c0qr3")
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource("AnimationNodeAnimation_jb0rd")
+blend_point_1/pos = 1.0
+min_space = 0.0
+blend_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8ywd3"]
 animation = &"Reload"
 
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_ahgtp"]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_n386v"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6ajsu"]
 animation = &"Shoot"
 
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_xrwd6"]
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_x83w5"]
+advance_mode = 2
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_5n18b"]
-graph_offset = Vector2(-515.811, 629.703)
-nodes/AimBlend/node = SubResource("AnimationNodeBlend2_c0qr3")
-nodes/AimBlend/position = Vector2(340, 840)
-nodes/AimShootBlend/node = SubResource("AnimationNodeBlend2_jb0rd")
-nodes/AimShootBlend/position = Vector2(560, 860)
-nodes/Aim_Hold/node = SubResource("AnimationNodeAnimation_wbbrg")
-nodes/Aim_Hold/position = Vector2(20, 1200)
-nodes/Aim_Hold_Shoot/node = SubResource("AnimationNodeAnimation_q3kbv")
-nodes/Aim_Hold_Shoot/position = Vector2(280, 1220)
-nodes/Idle/node = SubResource("AnimationNodeAnimation_vxp0s")
-nodes/Idle/position = Vector2(-180, 920)
-nodes/LocomotionBlend/node = SubResource("AnimationNodeBlend2_8ywd3")
-nodes/LocomotionBlend/position = Vector2(80, 880)
-nodes/Move/node = SubResource("AnimationNodeAnimation_6ajsu")
-nodes/Move/position = Vector2(-180, 1180)
-nodes/Reload/node = SubResource("AnimationNodeAnimation_x83w5")
-nodes/Reload/position = Vector2(580, 1120)
-nodes/ReloadBlend/node = SubResource("AnimationNodeBlend2_ahgtp")
-nodes/ReloadBlend/position = Vector2(840, 860)
-nodes/Shoot/node = SubResource("AnimationNodeAnimation_n386v")
-nodes/Shoot/position = Vector2(820, 1160)
-nodes/ShootBlend/node = SubResource("AnimationNodeBlend2_xrwd6")
-nodes/ShootBlend/position = Vector2(1040, 840)
-nodes/output/position = Vector2(1280, 760)
-node_connections = [&"AimBlend", 0, &"LocomotionBlend", &"AimBlend", 1, &"Aim_Hold", &"AimShootBlend", 0, &"AimBlend", &"AimShootBlend", 1, &"Aim_Hold_Shoot", &"LocomotionBlend", 0, &"Idle", &"LocomotionBlend", 1, &"Move", &"ReloadBlend", 0, &"AimShootBlend", &"ReloadBlend", 1, &"Reload", &"ShootBlend", 0, &"ReloadBlend", &"ShootBlend", 1, &"Shoot", &"output", 0, &"ShootBlend"]
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ahgtp"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_n386v"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_xrwd6"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5n18b"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ovbku"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c0qr3"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jb0rd"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wbbrg"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_q3kbv"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vxp0s"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8ywd3"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6ajsu"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3oppk"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_c0qr3"]
+states/Aim/node = SubResource("AnimationNodeAnimation_wbbrg")
+states/Aim/position = Vector2(386, 155)
+states/Aim_Hold/node = SubResource("AnimationNodeAnimation_q3kbv")
+states/Aim_Hold/position = Vector2(589, 194)
+states/Aim_Hold_Shoot/node = SubResource("AnimationNodeAnimation_vxp0s")
+states/Aim_Hold_Shoot/position = Vector2(726, 117)
+states/Locomotion/node = SubResource("AnimationNodeBlendSpace1D_wbbrg")
+states/Locomotion/position = Vector2(369, 51)
+states/Reload/node = SubResource("AnimationNodeAnimation_8ywd3")
+states/Reload/position = Vector2(172, 254)
+states/Shoot/node = SubResource("AnimationNodeAnimation_6ajsu")
+states/Shoot/position = Vector2(610, 24)
+states/Start/position = Vector2(172, 87)
+transitions = ["Locomotion", "Aim", SubResource("AnimationNodeStateMachineTransition_x83w5"), "Aim", "Locomotion", SubResource("AnimationNodeStateMachineTransition_ahgtp"), "Aim", "Aim_Hold", SubResource("AnimationNodeStateMachineTransition_n386v"), "Aim_Hold", "Locomotion", SubResource("AnimationNodeStateMachineTransition_xrwd6"), "Locomotion", "Shoot", SubResource("AnimationNodeStateMachineTransition_5n18b"), "Aim_Hold", "Aim_Hold_Shoot", SubResource("AnimationNodeStateMachineTransition_ovbku"), "Aim_Hold_Shoot", "End", SubResource("AnimationNodeStateMachineTransition_c0qr3"), "Start", "Locomotion", SubResource("AnimationNodeStateMachineTransition_jb0rd"), "Locomotion", "Aim_Hold", SubResource("AnimationNodeStateMachineTransition_wbbrg"), "Aim_Hold_Shoot", "Aim_Hold", SubResource("AnimationNodeStateMachineTransition_q3kbv"), "Locomotion", "Reload", SubResource("AnimationNodeStateMachineTransition_vxp0s"), "Reload", "Locomotion", SubResource("AnimationNodeStateMachineTransition_8ywd3"), "Reload", "Aim_Hold", SubResource("AnimationNodeStateMachineTransition_6ajsu"), "Aim_Hold", "Reload", SubResource("AnimationNodeStateMachineTransition_3oppk")]
+graph_offset = Vector2(0, 16.7695)
 
 [node name="Pistol" type="Node3D"]
 script = ExtResource("1_c0qr3")
@@ -553,9 +583,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.87001, 19.3439)
 [node name="recoil_thing" parent="Hand_R/Pistol/Pistol_model/88397aad5bb84b1a8041ea0faa6a2f2f_fbx/Object_2/RootNode/pistol" index="2"]
 transform = Transform3D(1, 3.70201e-08, 3.72529e-09, -3.70201e-08, 1, 0, -3.72529e-09, -1.37911e-16, 0.999999, 0, 30.5479, 2.95553)
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Hand_R/Pistol"]
-stream = ExtResource("3_jb0rd")
-
 [node name="Hand_L" type="CSGBox3D" parent="."]
 transform = Transform3D(-0.107942, -0.0124367, -0.658772, -0.0142325, 0.149308, -0.0228085, -0.10806, -0.00724206, 0.661062, -0.0368714, 0.350088, -0.49831)
 size = Vector3(1, 1, 1.02407)
@@ -570,15 +597,14 @@ autoplay = "Idle"
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
 root_node = NodePath("../Hand_R")
-tree_root = SubResource("AnimationNodeBlendTree_5n18b")
+tree_root = SubResource("AnimationNodeStateMachine_c0qr3")
 anim_player = NodePath("../AnimationPlayer")
-parameters/AimBlend/blend_amount = 0.0
-parameters/AimShootBlend/blend_amount = 0.0
-parameters/LocomotionBlend/blend_amount = 0.0
-parameters/ReloadBlend/blend_amount = 0.0
-parameters/ShootBlend/blend_amount = 0.0
+parameters/Locomotion/blend_position = -0.00156863
 
-[node name="MuzzlePoint" type="Marker3D" parent="."]
-transform = Transform3D(0.995436, 0.000711028, 0.0954213, 0.0072958, 0.996478, -0.0835361, -0.0951435, 0.0838513, 0.991925, 0.279528, 0.507011, -1.2102)
+[node name="AnimationTree2" type="AnimationTree" parent="."]
+root_node = NodePath("../Hand_R")
+tree_root = SubResource("AnimationNodeStateMachine_c0qr3")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Locomotion/blend_position = -0.00156863
 
 [editable path="Hand_R/Pistol"]

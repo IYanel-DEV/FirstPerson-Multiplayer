@@ -1,162 +1,195 @@
-# WeaponBase.gd
 extends Node3D
-class_name WeaponBase   
+class_name WeaponBase
 
-
-# Weapon properties
-var weapon_name: String = "Base Weapon"
+# Weapon stats
+var weapon_name: String = "Assault Rifle"
 var damage: int = 10
 var ammo: int = 30
 var max_ammo: int = 30
 var fire_rate: float = 0.2
 var can_fire: bool = true
 var is_aiming: bool = false
-# WeaponBase.gd - Add this property
-var weapon_scene_path: String = ""
-# References
+var is_reloading: bool = false
+
+# Player reference - FIXED: Use Node instead of CharacterBody3D
 var player: Node = null
-var animation_player: AnimationPlayer = null
-# WeaponBase.gd 
-var is_moving: bool = false
-# Signals
-signal weapon_fired
-signal weapon_reloaded
-signal ammo_changed(ammo, max_ammo)
+
+# Nodes
+@onready var anim_tree: AnimationTree = $AnimationTree
+@onready var anim_player: AnimationPlayer = $AnimationPlayer
+@onready var muzzle_point: Marker3D = $MuzzlePoint
+@onready var audio_player: AudioStreamPlayer3D = $Hand_R/Pistol/AudioStreamPlayer3D
+
+# Sounds - UPDATE THESE PATHS TO YOUR ACTUAL FILES!
+var shoot_sound = preload("res://Weapons/Pistol/Bullet/pistol-shot-233473.ogg")
+var reload_sound = preload("res://Weapons/Pistol/Bullet/glock-gun-reload-319593.ogg")
+
+# Bullet scene - UPDATE THIS PATH TO YOUR ACTUAL BULLET SCENE!
+var bullet_scene = preload("res://Weapons/Pistol/Bullet/Bullet.tscn")
 
 func _ready():
-	# Find animation player
-	animation_player = $AnimationPlayer
-	if not animation_player:
-		push_error("Weapon missing AnimationPlayer: " + weapon_name)
+	# Make sure animation tree works
+	if anim_tree:
+		anim_tree.active = true
+		_reset_all_blends()
+	
+	# Connect animation finished signal
+	if anim_player:
+		anim_player.animation_finished.connect(_on_animation_finished)
 
-# Called when weapon is equipped
-func equip():
-	visible = true
-	if animation_player:
-		animation_player.play("Idle")
+# Reset all animation blends to zero
+func _reset_all_blends():
+	_set_locomotion_blend(0.0)
+	_set_aim_blend(0.0)
+	_set_aim_shoot_blend(0.0)
+	_set_shoot_blend(0.0)
+	_set_reload_blend(0.0)
 
-# Called when weapon is unequipped
-func unequip():
-	visible = false
-	if animation_player:
-		animation_player.stop()
+# --------- BLEND FUNCTIONS ---------
+func set_moving(moving: bool):
+	_set_locomotion_blend(1.0 if moving else 0.0)
 
-# WeaponBase.gd - Updated fire function
+func _set_locomotion_blend(value: float):
+	if anim_tree:
+		anim_tree.set("parameters/LocomotionBlend/blend_amount", value)
+
+func _set_aim_blend(value: float):
+	if anim_tree:
+		anim_tree.set("parameters/AimBlend/blend_amount", value)
+
+func _set_aim_shoot_blend(value: float):
+	if anim_tree:
+		anim_tree.set("parameters/AimShootBlend/blend_amount", value)
+
+func _set_shoot_blend(value: float):
+	if anim_tree:
+		anim_tree.set("parameters/ShootBlend/blend_amount", value)
+
+func _set_reload_blend(value: float):
+	if anim_tree:
+		anim_tree.set("parameters/ReloadBlend/blend_amount", value)
+
+# --------- WEAPON FUNCTIONS ---------
 func fire():
-	if not can_fire or ammo <= 0:
-		return false
+	if not can_fire or ammo <= 0 or is_reloading:
+		print("Can't fire right now!")
+		return
 	
-	# Stop any current animation to prevent conflicts
-	if animation_player:
-		animation_player.stop()
-		animation_player.play("Shoot")
-	
+	print("Pew! Pew!")
 	ammo -= 1
 	can_fire = false
-	emit_signal("weapon_fired")
-	emit_signal("ammo_changed", ammo, max_ammo)
 	
-	# Start cooldown timer with error handling
-	var timer = get_tree().create_timer(fire_rate)
-	if timer:
-		timer.timeout.connect(_on_fire_cooldown, CONNECT_ONE_SHOT)
+	# 1. Play shoot animation
+	if is_aiming:
+		_set_aim_shoot_blend(1.0)
+		await get_tree().create_timer(0.1).timeout
+		_set_aim_shoot_blend(0.0)
 	else:
-		# Fallback if timer creation fails
-		can_fire = true
+		_set_shoot_blend(1.0)
+		await get_tree().create_timer(0.1).timeout
+		_set_shoot_blend(0.0)
 	
-	return true
-
-func _on_fire_cooldown():
+	# 2. SPAWN BULLET
+	_spawn_bullet()
+	
+	# 3. PLAY SOUND
+	_play_sound(shoot_sound)
+	
+	# 4. Wait before can fire again
+	await get_tree().create_timer(fire_rate).timeout
 	can_fire = true
-	if is_aiming and animation_player:
-		animation_player.play("Aim_Hold")
 
-# WeaponBase.gd - Improved animation functions
-func aim(aiming: bool):
-	if not animation_player:
+func _spawn_bullet():
+	if bullet_scene == null:
+		print("No bullet scene found!")
 		return
 	
-	is_aiming = aiming
+	if muzzle_point == null:
+		print("No muzzle point found!")
+		return
 	
-	if aiming:
-		# If reloading, wait for reload to finish
-		if animation_player.current_animation == "Reload":
-			await animation_player.animation_finished
-		
-		animation_player.play("Aim")
-		await animation_player.animation_finished
-		
-		if can_fire:
-			animation_player.play("Aim_Hold")
-	else:
-		# Stop aim hold and return to appropriate state
-		if animation_player.current_animation == "Aim_Hold" or animation_player.current_animation == "Aim_Hold_Shoot":
-			animation_player.play_backwards("Aim")
-			await animation_player.animation_finished
-			
-			if can_fire:
-				if is_moving:
-					animation_player.play("Move")
-				else:
-					animation_player.play("Idle")
+	# Create bullet instance
+	var bullet = bullet_scene.instantiate()
+	
+	# Add bullet to the scene
+	get_tree().current_scene.add_child(bullet)
+	
+	# Position bullet at muzzle
+	bullet.global_position = muzzle_point.global_position
+	bullet.global_rotation = muzzle_point.global_rotation
+	
+	# Setup bullet (damage and direction)
+	var shoot_direction = -muzzle_point.global_transform.basis.z
+	bullet.setup(damage, shoot_direction)
+	
+	print("Bullet spawned!")
+
+func _play_sound(sound):
+	if audio_player and sound:
+		audio_player.stream = sound
+		audio_player.play()
 
 func reload():
-	if not animation_player:
+	if is_reloading or ammo == max_ammo:
 		return
 	
-	# Cancel aiming if active
-	if is_aiming:
-		is_aiming = false
-		if animation_player.current_animation == "Aim_Hold" or animation_player.current_animation == "Aim":
-			animation_player.play_backwards("Aim")
-			await animation_player.animation_finished
+	print("Reloading...")
+	is_reloading = true
+	can_fire = false
+	
+	# Play reload sound
+	_play_sound(reload_sound)
 	
 	# Play reload animation
-	animation_player.play("Reload")
-	await animation_player.animation_finished
+	_set_reload_blend(1.0)
 	
-	# Refill ammo
+	# Wait 2 seconds for reload
+	await get_tree().create_timer(2.0).timeout
+	
+	# Finish reloading
 	ammo = max_ammo
-	emit_signal("weapon_reloaded")
-	emit_signal("ammo_changed", ammo, max_ammo)
-	
-	# Return to appropriate state after reload
-	if can_fire:
-		if is_aiming:
-			# If player wants to aim again
-			aim(true)
-		elif is_moving:
-			animation_player.play("Move")
-		else:
-			animation_player.play("Idle")
-# Handle movement animation
-func set_moving(moving: bool):
-	if not animation_player or is_aiming:
+	is_reloading = false
+	can_fire = true
+	_set_reload_blend(0.0)
+	print("Reload complete!")
+
+func equip():
+	print(weapon_name + " equipped!")
+	visible = true
+	_reset_all_blends()
+
+func unequip():
+	print(weapon_name + " unequipped!")
+	visible = false
+
+func aim(enable: bool):
+	if is_reloading:
 		return
 	
-	if moving and animation_player.current_animation != "Move":
-		animation_player.play("Move")
-	elif not moving and animation_player.current_animation != "Idle":
-		animation_player.play("Idle")
-# WeaponBase.gd - Add animation priority system
-func play_animation(anim_name: String, force: bool = false):
-	if not animation_player:
-		return
-	
-	# Animation priorities (higher number = higher priority)
-	var priorities = {
-		"Reload": 3,
-		"Shoot": 2,
-		"Aim_Hold_Shoot": 2,
-		"Aim": 1,
-		"Aim_Hold": 1,
-		"Move": 0,
-		"Idle": 0
-	}
-	
-	var current_priority = priorities.get(animation_player.current_animation, -1)
-	var new_priority = priorities.get(anim_name, -1)
-	
-	# Only play if higher priority or forced
-	if force or new_priority >= current_priority:
-		animation_player.play(anim_name)
+	is_aiming = enable
+	print("Aiming: " + str(enable))
+	_set_aim_blend(1.0 if enable else 0.0)
+
+func _on_animation_finished(anim_name):
+	# Clean up after animations
+	if anim_name == "Aim_Hold_Shoot":
+		_set_aim_shoot_blend(0.0)
+	elif anim_name == "Shoot":
+		_set_shoot_blend(0.0)
+	elif anim_name == "Reload":
+		_set_reload_blend(0.0)
+		ammo = max_ammo
+		is_reloading = false
+		can_fire = true
+
+# Helper function to get animation length
+func _get_animation_length(anim_name):
+	if anim_player and anim_player.has_animation(anim_name):
+		return anim_player.get_animation(anim_name).length
+	return 0.3
+
+# --------- PLAYER ASSIGNMENT ---------
+# Add this function to safely assign the player
+func assign_player(player_node: Node):
+	player = player_node
+	print("Player assigned to weapon: ", player.name)

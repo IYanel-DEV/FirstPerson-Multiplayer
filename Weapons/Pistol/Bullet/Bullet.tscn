@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://nud12jthbmg0"]
+
+[ext_resource type="Script" uid="uid://beoapr6dpqoxp" path="res://Weapons/Pistol/Bullet/Bullet.gd" id="1_rq336"]
+[ext_resource type="PackedScene" uid="uid://bavl14ny8ycm5" path="res://Weapons/Pistol/Bullet/Pistol_Bullet.glb" id="2_1tjh8"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cdk04"]
+radius = 0.0535173
+height = 0.312223
+
+[node name="Bullet" type="Area3D"]
+script = ExtResource("1_rq336")
+
+[node name="Pistol_Bullet" parent="." instance=ExtResource("2_1tjh8")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0214485, -0.99977, 0, 0.99977, 0.0214485, 0, 0, -0.0530473)
+shape = SubResource("CapsuleShape3D_cdk04")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0

@@ -102,7 +102,7 @@ func _on_weapon_changed(weapon: WeaponBase):
 	
 	# Add new weapon to socket
 	weapon_socket.add_child(weapon)
-	weapon.player = self
+	weapon.assign_player(self)
 
 # PlayerController.gd - Add this method
 func get_inventory():
