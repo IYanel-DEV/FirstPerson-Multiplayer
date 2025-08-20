@@ -1,5 +1,36 @@
-# Normalize EOL for all files that Git considers text files
+# Normalize line endings for all text files
 * text=auto eol=lf
+
+# Godot-specific files
+*.gd text
+*.tscn text
+*.tres text
+*.import text
+*.godot text
+*.cfg text
+*.json text
+*.md text
+*.txt text
+
+# Binary files that should not be normalized
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.bmp binary
+*.svg binary
+*.wav binary
+*.ogg binary
+*.mp3 binary
+*.obj binary
+*.glb binary
+*.gltf binary
+*.fbx binary
+*.blend binary
+*.max binary
+*.ma binary
+*.mb binary
+*.stl binary
 
 # Export-ignore patterns - exclude Godot project files and configs
 /.editorconfig export-ignore
@@ -25,7 +56,41 @@
 !/Player/** export-ignore
 !/Textures export-ignore
 !/Textures/** export-ignore
+!/Weapons export-ignore
+!/Weapons/** export-ignore
+!/addons export-ignore
+!/addons/** export-ignore
 
 # Keep LICENSE and README for users
 !/LICENSE export-ignore
 !/README.md export-ignore
+
+# Godot import files (should be tracked but not exported)
+*.import -export
+
+# Don't export any .import files in the export
+*.import export-ignore
+
+# Don't export the addons folder if it contains sensitive data
+#/addons/MultiPlay export-ignore
+
+# Force specific file types to be treated as text
+*.glsl text
+*.shader text
+*.csv text
+*.xml text
+*.html text
+*.css text
+*.js text
+
+# Force specific file types to be treated as binary
+*.zip binary
+*.rar binary
+*.7z binary
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
