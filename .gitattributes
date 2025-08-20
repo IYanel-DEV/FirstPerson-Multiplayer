@@ -1,2 +1,31 @@
-# Normalize EOL for all files that Git considers text files.
+# Normalize EOL for all files that Git considers text files
 * text=auto eol=lf
+
+# Export-ignore patterns - exclude Godot project files and configs
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/export_presets.cfg export-ignore
+/project.godot export-ignore
+
+# Exclude image files and their import data
+/Icon.png export-ignore
+/Icon.png.import export-ignore
+/icon.svg export-ignore
+/icon.svg.import export-ignore
+
+# Keep these essential folders for the multiplayer FPS
+!/MainMenu export-ignore
+!/MainMenu/** export-ignore
+!/Maps export-ignore
+!/Maps/** export-ignore
+!/Networking export-ignore
+!/Networking/** export-ignore
+!/Player export-ignore
+!/Player/** export-ignore
+!/Textures export-ignore
+!/Textures/** export-ignore
+
+# Keep LICENSE and README for users
+!/LICENSE export-ignore
+!/README.md export-ignore

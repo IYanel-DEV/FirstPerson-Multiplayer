@@ -1,4 +1,4 @@
-# 🎯 Godot Multiplayer FPS Template  
+# 🎯 Godot Multiplayer First Person Template  
 <div align="center">
 <img width="128" height="128" alt="Icon" src="https://github.com/user-attachments/assets/433b399c-858e-4191-9b41-db43bad45067" />
 </div>
@@ -21,7 +21,7 @@
 
 ## 🌟 Overview
 
-The **Godot Multiplayer FPS Template** is your gateway to creating competitive or cooperative multiplayer shooters. Built with performance and scalability in mind, this template provides everything you need to jumpstart your FPS project with professional-grade networking and smooth gameplay mechanics.
+The **Godot Multiplayer First Person Template** is your gateway to creating competitive or cooperative multiplayer shooters. Built with performance and scalability in mind, this template provides everything you need to jumpstart your FPS project with professional-grade networking and smooth gameplay mechanics.
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/13cc84dd-43d7-43fc-84b2-55d1b48d7b4f" alt="Godot FPS Template Screenshot" width="800px" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
@@ -222,5 +222,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Made with ❤️ using Godot Engine**
 
 [Report Bug](https://github.com/yourusername/godot-multiplayer-fps-template/issues) • [Request Feature](https://github.com/yourusername/godot-multiplayer-fps-template/issues) • [Join Discord](https://discord.gg/your-discord)
+
+For the Map assets i used kenney assets 
+https://www.kenney.nl/assets/prototype-textures
 
 </div>
