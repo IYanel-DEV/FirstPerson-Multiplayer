@@ -1,6 +1,8 @@
 # PlayerController.gd
 # This script handles both local and remote player movement, including physics, camera, and networking
 
+# PlayerController.gd - Add at the top
+class_name PlayerController
 extends CharacterBody3D
 
 # ===== EXPORTED SETTINGS =====
@@ -45,7 +47,9 @@ var jump_buffer_timer := 0.0          # Jump input buffer timer
 var coyote_timer := 0.0               # Coyote time timer
 var can_jump := true                  # Can player jump
 var jump_count := 0                   # Current jump count
-
+# Weapon system
+var inventory: Inventory
+var weapon_socket: Node3D
 # ===== CAMERA EFFECTS =====
 var camera_tilt := 0.0                # Current camera tilt amount
 var raw_input_dir := Vector2.ZERO     # Raw input direction
@@ -74,14 +78,96 @@ func _ready():
 	# Setup for local player
 	if is_multiplayer_authority():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		if camera: 
+		if camera:
 			camera.current = true
 	current_speed = walk_speed
+	# Add player to group
+	add_to_group("player")
+	print("Player added to 'player' group")
+	# Initialize inventory
+	inventory = Inventory.new()
+	add_child(inventory)
+	inventory.weapon_changed.connect(_on_weapon_changed)
+
+	# Find weapon socket
+	weapon_socket = $Camera3D/HeadPosition/WeaponSocket
+	if not weapon_socket:
+		push_error("WeaponSocket not found in player")
+
+	# Handle weapon change
+func _on_weapon_changed(weapon: WeaponBase):
+	# Remove any existing weapons from socket
+	for child in weapon_socket.get_children():
+		child.queue_free()
+	
+	# Add new weapon to socket
+	weapon_socket.add_child(weapon)
+	weapon.player = self
+
+# PlayerController.gd - Add this method
+func get_inventory():
+	return inventory
 
 # ===== INPUT HANDLING =====
 func _input(event):
 	if not input_enabled or not is_multiplayer_authority():
 		return
+	
+	# Fire weapon
+	if event.is_action_pressed("fire"):
+		if inventory.current_weapon:
+			inventory.current_weapon.fire()
+	
+	# Reload weapon
+	if event.is_action_pressed("reload"):
+		if inventory.current_weapon:
+			inventory.current_weapon.reload()
+	
+	# Aim down sights
+	if event.is_action_pressed("aim"):
+		if inventory.current_weapon:
+			inventory.current_weapon.aim(true)
+	if event.is_action_released("aim"):
+		if inventory.current_weapon:
+			inventory.current_weapon.aim(false)
+	
+	# Drop weapon (this MUST be inside _input)
+	if event.is_action_pressed("drop_weapon"):
+		if inventory and inventory.current_weapon:
+			var drop_info = inventory.drop_current_weapon()
+			if drop_info:
+				print("Dropping weapon: ", drop_info["type"])
+				
+				# Load and position the dropped weapon
+				var dropped_weapon_scene = load("res://Weapons/Pistol/DroppedPistol.tscn")
+				if dropped_weapon_scene:
+					var dropped_weapon = dropped_weapon_scene.instantiate()
+					
+					# Set weapon properties
+					if dropped_weapon.has_method("set_weapon_properties"):
+						dropped_weapon.set_weapon_properties(
+							load(drop_info["scene_path"]),
+							drop_info["type"]
+						)
+					
+					# Position in front of player
+					get_parent().add_child(dropped_weapon)
+					dropped_weapon.global_transform = global_transform
+					dropped_weapon.global_position += -global_transform.basis.z * 2.0
+					
+					# Apply some force to make it look natural
+					dropped_weapon.apply_central_impulse(
+						-global_transform.basis.z * 3 + Vector3.UP * 2
+					)
+					dropped_weapon.apply_torque_impulse(
+						Vector3(randf_range(-2, 2), randf_range(-2, 2), randf_range(-2, 2))
+					)
+				else:
+					print("Failed to load dropped weapon scene")
+			else:
+				print("No weapon to drop")
+		else:
+			print("No inventory or current weapon")
 	
 	# Mouse look
 	if event is InputEventMouseMotion:
@@ -94,12 +180,15 @@ func _input(event):
 	if event.is_action_pressed("jump"):
 		jump_buffer_timer = 0.15
 
+
 # ===== PHYSICS PROCESS =====
 func _physics_process(delta):
 	if not input_enabled:
 		velocity = Vector3.ZERO
 		return
-		
+			# Update weapon movement state
+	if inventory.current_weapon:
+		inventory.current_weapon.set_moving(is_moving)
 	if is_multiplayer_authority():
 		# Local player movement
 		process_local_movement(delta)

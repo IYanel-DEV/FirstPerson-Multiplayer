@@ -31,6 +31,7 @@ func _on_peer_disconnected(peer_id: int):
 	remove_player(peer_id)
 
 # Spawns a player for the given peer_id
+# GameMode.gd - Fix the spawn_player function
 func spawn_player(peer_id: int):
 	# Don't spawn if player already exists
 	if has_node("Player_" + str(peer_id)):
@@ -45,6 +46,11 @@ func spawn_player(peer_id: int):
 	add_child(player, true)
 	# Position player at random spawn point
 	player.global_position = get_random_spawn_position()
+	
+	# Add a pistol to the player's inventory - THIS MUST COME AFTER player IS DEFINED
+	var pistol_scene = load("res://Weapons/Pistol/Pistol.tscn")
+	var pistol = pistol_scene.instantiate()
+	player.inventory.add_weapon(pistol)
 	
 	print("Spawned player: ", player.name)
 

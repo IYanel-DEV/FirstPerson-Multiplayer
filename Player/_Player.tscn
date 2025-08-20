@@ -39,7 +39,8 @@ properties/7/path = NodePath(".:position:z")
 properties/7/spawn = true
 properties/7/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+platform_wall_layers = 129
 safe_margin = 0.08
 script = ExtResource("1_cb6jr")
 
@@ -48,8 +49,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.73409, 0)
 
 [node name="HeadPosition" type="Node3D" parent="Camera3D"]
 
+[node name="WeaponSocket" type="Node3D" parent="Camera3D/HeadPosition"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.734, 0)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_hegmd")
+debug_fill = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_fkuj8")
