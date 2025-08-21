@@ -71,8 +71,7 @@
 # Don't export any .import files in the export
 *.import export-ignore
 
-# Don't export the addons folder if it contains sensitive data
-#/addons/MultiPlay export-ignore
+
 
 # Force specific file types to be treated as text
 *.glsl text
