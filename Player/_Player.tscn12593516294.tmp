@@ -1,13 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://cmov2y6h564hu"]
+[gd_scene load_steps=8 format=3 uid="uid://cmov2y6h564hu"]
 
 [ext_resource type="Script" uid="uid://ba5s5f24vha8o" path="res://Player/Scripts/Player.gd" id="1_cb6jr"]
 [ext_resource type="Script" uid="uid://x7jvc2jhq42u" path="res://Player/Scripts/LocalPlayerController.gd" id="2_luh4h"]
 [ext_resource type="Script" uid="uid://d28ggpbcl23fi" path="res://Networking/RemotePlayerController.gd" id="3_kshrv"]
-[ext_resource type="Script" uid="uid://pavoehlreocm" path="res://Player/Scripts/PlayerMovement.gd" id="4_1jmuo"]
-[ext_resource type="Script" uid="uid://0a8ueq41ykl2" path="res://Player/Scripts/PlayerCamera.gd" id="5_s8h0a"]
-[ext_resource type="Script" uid="uid://cbkhn2vanjxxx" path="res://Player/Scripts/PlayerNetwork.gd" id="6_fgvkn"]
-[ext_resource type="Script" uid="uid://d2j2i55lnje70" path="res://Player/Scripts/PlayerWeapons.gd" id="7_adky4"]
-[ext_resource type="Script" uid="uid://q4hls1dec0g6" path="res://Player/Scripts/Inventory.gd" id="8_fbg2y"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hegmd"]
 
@@ -83,18 +78,3 @@ script = ExtResource("2_luh4h")
 
 [node name="RemotePlayerController" type="Node" parent="."]
 script = ExtResource("3_kshrv")
-
-[node name="PlayerMovement" type="Node" parent="."]
-script = ExtResource("4_1jmuo")
-
-[node name="PlayerCamera" type="Node" parent="."]
-script = ExtResource("5_s8h0a")
-
-[node name="PlayerNetwork" type="Node" parent="."]
-script = ExtResource("6_fgvkn")
-
-[node name="PlayerWeapons" type="Node" parent="."]
-script = ExtResource("7_adky4")
-
-[node name="Inventory" type="Node" parent="."]
-script = ExtResource("8_fbg2y")

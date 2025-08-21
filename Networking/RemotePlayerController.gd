@@ -62,7 +62,7 @@ func _physics_process(delta):
 	interpolate_movement(delta)
 
 # Handles interpolation between network updates
-func interpolate_movement(delta):
+func interpolate_movement(_delta): 
 	# Need at least 2 updates to interpolate
 	if position_history.size() < 2:
 		return

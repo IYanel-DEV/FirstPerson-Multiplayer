@@ -1,23 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://d4cpj11iha5uc"]
+[gd_scene load_steps=15 format=3 uid="uid://d4cpj11iha5uc"]
 
 [ext_resource type="Script" uid="uid://buap128n0gj" path="res://Maps/Scripts/GameMode.gd" id="1_bliyt"]
 [ext_resource type="Texture2D" uid="uid://biec8m2uv843c" path="res://Textures/texture_03.png" id="2_d7oxw"]
 [ext_resource type="Texture2D" uid="uid://cwcexiteh4s2q" path="res://Textures/texture_02purpl.png" id="3_l8b2n"]
 [ext_resource type="Texture2D" uid="uid://d0u76ui7ag1at" path="res://Textures/texture_02.png" id="4_abnra"]
 [ext_resource type="Script" uid="uid://de4ax627pkk2y" path="res://Maps/Scripts/PauseMenu.gd" id="5_d7oxw"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4okp1"]
-
-[sub_resource type="Sky" id="Sky_d7oxw"]
-sky_material = SubResource("ProceduralSkyMaterial_4okp1")
-
-[sub_resource type="Environment" id="Environment_l8b2n"]
-background_mode = 2
-sky = SubResource("Sky_d7oxw")
-tonemap_mode = 1
-ssao_enabled = true
-ssil_enabled = true
-sdfgi_enabled = true
+[ext_resource type="PackedScene" uid="uid://dg5h0ninwhwge" path="res://Weapons/Pistol/DroppedPistol.tscn" id="6_l8b2n"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_r2ywu"]
 
@@ -42,16 +30,25 @@ refraction_enabled = true
 uv1_triplanar = true
 uv1_world_triplanar = true
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_d7oxw"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_l8b2n"]
+sky_material = SubResource("ProceduralSkyMaterial_d7oxw")
+
+[sub_resource type="Environment" id="Environment_abnra"]
+background_mode = 2
+sky = SubResource("Sky_l8b2n")
+tonemap_mode = 2
+ssao_enabled = true
+sdfgi_enabled = true
+glow_enabled = true
+
 [node name="GameMode" type="Node3D"]
 script = ExtResource("1_bliyt")
 
 [node name="WorldObjects" type="Node" parent="."]
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldObjects"]
-transform = Transform3D(0.99027, 0.0455113, -0.131503, 0.139156, -0.323871, 0.935812, 0, -0.945006, -0.327053, 0.523988, 1.30407, -0.0454535)
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="WorldObjects"]
-environment = SubResource("Environment_l8b2n")
 
 [node name="Floor" type="StaticBody3D" parent="WorldObjects"]
 
@@ -151,6 +148,13 @@ material = SubResource("StandardMaterial3D_l8b2n")
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -6, 1.51714, 1)
 use_collision = true
 material = SubResource("StandardMaterial3D_l8b2n")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="WorldObjects/Floor"]
+environment = SubResource("Environment_abnra")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldObjects/Floor"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
 
 [node name="Label3D" type="Label3D" parent="WorldObjects"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.99836, -9.84016)
@@ -306,6 +310,9 @@ pivot_offset = Vector2(0, 7.37)
 layout_mode = 2
 size_flags_vertical = 10
 text = "Back"
+
+[node name="DroppedPistol" parent="." instance=ExtResource("6_l8b2n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.76457, 2.38419e-07, -4.10167)
 
 [connection signal="pressed" from="PauseMenu/PauseContainer/Continue" to="PauseMenu" method="_on_continue_pressed"]
 [connection signal="pressed" from="PauseMenu/PauseContainer/Settings" to="PauseMenu" method="_on_settings_pressed"]

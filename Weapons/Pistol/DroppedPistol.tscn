@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dg5h0ninwhwge"]
 
-[ext_resource type="PackedScene" uid="uid://bnjdfm548w4ye" path="res://Weapons/Pistol/Pistol.glb" id="1_2mcrj"]
 [ext_resource type="Script" uid="uid://b227enjnr7iyv" path="res://Weapons/Pistol/DroppedWeapon.gd" id="1_7b52e"]
+[ext_resource type="PackedScene" uid="uid://djayojv8ndd4t" path="res://Weapons/Pistol/Pistol.tscn" id="2_7b52e"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_7b52e"]
 
@@ -15,7 +15,7 @@ height = 1.79226
 
 [node name="DroppedPistol" type="RigidBody3D"]
 script = ExtResource("1_7b52e")
-weapon_scene = ExtResource("1_2mcrj")
+weapon_scene = ExtResource("2_7b52e")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.216117, 0, 0, 0, 0.241106, 0, 0, 0, 0.273477, 0, 0.156723, 0)

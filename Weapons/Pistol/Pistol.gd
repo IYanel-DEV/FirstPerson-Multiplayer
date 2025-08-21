@@ -1,7 +1,6 @@
-extends "res://Weapons/WeaponBase.gd"
+# Pistol.gd
+extends WeaponBase
 
-
-# Pistol.gd - Update _ready function
 func _ready():
 	weapon_name = "Pistol"
 	damage = 25
@@ -9,5 +8,5 @@ func _ready():
 	max_ammo = 12
 	fire_rate = 0.3
 	
-	
-	super._ready() # Call parent's _ready
+	# Call parent's _ready
+	super._ready()
